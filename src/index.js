@@ -3,10 +3,32 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import StudentDashboard from "./feat/StudentDashboard";
+import ConfigPage from "./feat/ConfigPage";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/config",
+    element: <ConfigPage />,
+  },
+  {
+    path: "/student-dashboard",
+    element: <StudentDashboard />,
+  },
+  {
+    path: "/unlock-hint",
+    element: <div>Unlock Hint Here</div>,
+  },
+]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router}></RouterProvider>
   </React.StrictMode>
 );
 

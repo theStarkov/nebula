@@ -1,12 +1,23 @@
 const Navbar = () => {
   return (
-    <div className="grid grid-cols-3 p-8">
-      <div className="p-4 bg-green-200 text-center">Nebula - dock</div>
-      <div className="p-4 bg-green-200 text-center flex justify-center">
-        <div className="bg-purple-300 mx-8">Configurations</div>
-        <div className="bg-red-200">Student Dashboard</div>
+    <div className="max-w-screen-xl mx-auto">
+      <div className="grid grid-cols-3 pt-6">
+        <div className="p-4 text-center">
+          <a href="/">🚀 Nebula - dock</a>
+        </div>
+        <div className="p-4 text-center flex justify-center">
+          <div className=" mx-8">
+            <a href="/config"> Configurations</a>
+          </div>
+          <div className="">
+            <a href="/student-dashboard">Student Dashboard</a>
+          </div>
+        </div>
+        <div className="p-4">
+          <a href="/unlock-hint">Unlock A Hint</a>
+        </div>
       </div>
-      <div className="p-4 bg-green-200">Unlock A Hint</div>
+      <hr className=" h-px bg-gray-200 mb-3 border-0" />
     </div>
   );
 };
