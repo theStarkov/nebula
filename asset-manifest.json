@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/nebula-frontend/static/css/main.e283d2a5.css",
+    "main.js": "/nebula-frontend/static/js/main.02093f23.js",
+    "static/media/nebula_pic.png": "/nebula-frontend/static/media/nebula_pic.f86aade114634e264b6c.png",
+    "index.html": "/nebula-frontend/index.html",
+    "main.e283d2a5.css.map": "/nebula-frontend/static/css/main.e283d2a5.css.map",
+    "main.02093f23.js.map": "/nebula-frontend/static/js/main.02093f23.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e283d2a5.css",
+    "static/js/main.02093f23.js"
+  ]
+}
