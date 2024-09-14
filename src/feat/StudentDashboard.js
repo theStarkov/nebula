@@ -17,6 +17,7 @@ const StudentDashboard = () => {
       Attendance: 0,
       "Quiz Submitted": 0,
       total: 0,
+      Cohort: "",
     },
   ]);
 
@@ -116,7 +117,7 @@ const StudentDashboard = () => {
 
     try {
       const matchedUsers = findMatchingObject(users, dataToSend);
-      console.log("This is the matched User", matchedUsers);
+
       if (matchedUsers.length > 0) {
         setReturnedUser(
           matchedUsers.map((usr, index) => {
@@ -132,6 +133,7 @@ const StudentDashboard = () => {
             Attendance: 0,
             "Quiz Submitted": 0,
             total: 0,
+            Cohort: " ",
           },
         ]);
       }
@@ -144,6 +146,7 @@ const StudentDashboard = () => {
       alert("An error occurred while searching.");
     }
   };
+  console.log("This is the returned User", returnedUser);
 
   return (
     <div>
@@ -242,7 +245,7 @@ const StudentDashboard = () => {
             Graph happens here.
           </div>
           <h5 className="text-center text-blue-700 mb-2">attendanceAverage</h5> */}
-          <LineChart cohort={returnedUser.Cohort} />
+          <LineChart cohort={returnedUser[0].Cohort} />
         </div>
       </div>
     </div>
