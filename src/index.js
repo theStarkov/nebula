@@ -6,6 +6,7 @@ import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudentDashboard from "./feat/StudentDashboard";
 import ConfigPage from "./feat/ConfigPage";
+import Unlock from "./feat/Unlock";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/unlock-hint",
-    element: <div>Unlock Hint Here</div>,
+    element: <Unlock />,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));

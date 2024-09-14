@@ -1,6 +1,107 @@
+import { useState } from "react";
 import Navbar from "./Navbar";
+import Swal from "sweetalert2";
+import axios from "axios";
+import Loading from "./Loading";
 
 const ConfigPage = () => {
+  //const [result, setResult] = useState("");
+  //const [checkAlert, setCheckAlert] = useState(false);
+  const [inputs, setInputs] = useState({});
+  const [submitVal, setSubmitVal] = useState(false);
+
+  // const handleSubmit = async () => {
+  //   await axios
+  //     .get("http://localhost:8000/api/health-check/", null)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       if (response.status === 200) {
+  //         console.log(response.data);
+  //         setResult(response.data.message); // Assume response.data is an array of objects
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+
+  const showAlert = async (type, message, route) => {
+    await Swal.fire({ icon: type, text: message, confirmButtonColor: "Blue" });
+  };
+
+  const fulfillCheck = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/health-check",
+        {}
+      );
+      console.log("THIS IS RESPONSE....", response);
+
+      if (response.statusText === "OK") {
+        showAlert("success", response.data.msg);
+        //alert(response.data.msg);
+        console.log(response.data.msg);
+        // setResult(response.data.msg); // Ensure response.data has a `message` property
+      }
+    } catch (error) {
+      showAlert("warning", error.message || "An error occurred");
+      console.error(error); // Log errors if the request fails
+    }
+  };
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    //set keyboard strokes to the search state
+    setInputs((values) => ({ ...values, [name]: value }));
+  };
+
+  const checkDB = async (e) => {
+    e.preventDefault();
+    setSubmitVal(true);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/test-db-connection",
+        {
+          inputs,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      console.log("Response:", res);
+      console.log("Response Status:", res.status);
+      console.log("Response Data:", res.data);
+
+      if (res.status === 200) {
+        // Adjust status check if needed
+        showAlert(
+          "success",
+          res.data.message || "Database connection successful"
+        );
+      } else {
+        showAlert("warning", res.data.message || "Form submission failed");
+      }
+
+      setInputs({
+        database: "",
+        username: "",
+        password: "",
+        host: "",
+        port: "",
+        engine: "",
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      showAlert(
+        "error",
+        error.response.data.error || "An unexpected error occurred"
+      );
+    } finally {
+      setSubmitVal(false);
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -110,7 +211,7 @@ const ConfigPage = () => {
         <p className="mx-48 my-4">Testing on "..backendurl/api/health-check"</p>
         <hr className=" h-px bg-gray-200 mx-48 my-4 border-0" />
         <h3 className="mx-48 mb-4">Backend URL</h3>
-        <form action="" className="mx-48 pb-32">
+        <div className="mx-48 pb-32">
           <input
             className="mb-4 px-2 py-2 border border-gray-200 rounded w-1/2 mr-4"
             type="text"
@@ -121,16 +222,14 @@ const ConfigPage = () => {
           <button
             className="bg-blue-600 px-4 py-2 border mr-4 rounded-md text-white"
             type="submit"
+            onClick={fulfillCheck}
           >
             Test Backend Link
           </button>
-          <button
-            className="bg-black px-4 py-2 border mr-4 rounded-md text-white"
-            type="submit"
-          >
+          <button className="bg-black px-4 py-2 border mr-4 rounded-md text-white">
             Save Backend URL
           </button>
-        </form>
+        </div>
         <hr className=" h-px bg-gray-200 mx-48 my-4 border-0" />
       </div>
 
@@ -141,56 +240,97 @@ const ConfigPage = () => {
         </p>
         <hr className=" h-px bg-gray-200 mx-48 my-4 border-0" />
 
-        <form action="">
-          <div className="mx-48 grid grid-cols-2 gap-4">
-            <div className="grid grid-rows-2 gap-4">
-              <div className="">
-                <label htmlFor="">Database Host</label>
-                <br />
-                <input
-                  className="mt-2 w-full border border-gray-200 rounded-md p-1"
-                  type="text"
-                  placeholder="localhost"
-                />
-              </div>
-              <div className="">
-                <label htmlFor="">Database Password</label>
-                <br />
-                <input
-                  className="mt-2 w-full border border-gray-200 rounded-md p-1"
-                  type="text"
-                  placeholder="password"
-                />
-              </div>
+        <form className="mx-48 grid grid-cols-2 gap-4" onSubmit={checkDB}>
+          <div className="grid grid-rows-2 gap-4">
+            <div className="">
+              <label htmlFor="">Database Host</label>
+              <br />
+              <input
+                className="mt-2 w-full border border-gray-200 rounded-md p-1"
+                type="text"
+                placeholder="localhost"
+                name="host"
+                value={inputs.host || ""}
+                onChange={handleChange}
+              />
             </div>
-            <div className="grid grid-rows-2 gap-4">
-              <div className="">
-                <label htmlFor="">Database User</label>
-                <br />
-                <input
-                  className="mt-2 w-full border border-gray-200 rounded-md p-1"
-                  type="text"
-                  placeholder="root"
-                />
-              </div>
-              <div className="">
-                <label htmlFor="">Database Name</label>
-                <br />
-                <input
-                  className="mt-2 w-full border border-gray-200 rounded-md p-1"
-                  type="text"
-                  placeholder="nebula"
-                />
-              </div>
+            <div className="">
+              <label htmlFor="">Database Password</label>
+              <br />
+              <input
+                className="mt-2 w-full border border-gray-200 rounded-md p-1"
+                type="password"
+                placeholder="password"
+                name="password"
+                value={inputs.password || ""}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="">
+              <label htmlFor="">Database Engine</label>
+              <br />
+              <input
+                className="mt-2 w-full border border-gray-200 rounded-md p-1"
+                type="text"
+                placeholder="mysql"
+                name="engine"
+                value={inputs.engine || ""}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="grid grid-rows-2 gap-4">
+            <div className="">
+              <label htmlFor="">Database User</label>
+              <br />
+              <input
+                className="mt-2 w-full border border-gray-200 rounded-md p-1"
+                type="text"
+                placeholder="root"
+                name="username"
+                value={inputs.username || ""}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="">
+              <label htmlFor="">Database Name</label>
+              <br />
+              <input
+                className="mt-2 w-full border border-gray-200 rounded-md p-1"
+                type="text"
+                placeholder="nebula"
+                name="database"
+                value={inputs.database || ""}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="">
+              <label htmlFor="">Database Port</label>
+              <br />
+              <input
+                className="mt-2 w-full border border-gray-200 rounded-md p-1"
+                type="text"
+                placeholder="3306"
+                name="port"
+                value={inputs.port || ""}
+                onChange={handleChange}
+              />
             </div>
           </div>
           <button
-            className="mx-48 mt-8 mb-16 bg-[#A52A2A] text-white rounded px-2 py-1"
+            className=" mt-8 mb-16 bg-[#A52A2A] text-white rounded py-1"
             type="submit"
           >
-            Test Database Connection
+            {submitVal ? <Loading /> : "Test Database Connection"}
           </button>
         </form>
+        {/* <button
+          type="submit"
+          className="bg-[#050036] rounded text-white py-3 w-full lg:w-3/4"
+        >
+          {submitVal ? <Loading /> : "Submit"}
+        </button> */}
+
         <hr className=" h-px bg-gray-200 mx-48 my-4 border-0" />
       </div>
     </div>
