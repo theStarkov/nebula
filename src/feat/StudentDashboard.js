@@ -26,7 +26,7 @@ const StudentDashboard = () => {
   useEffect(() => {
     const pullData = async () => {
       await axios
-        .get("http://localhost:5000/api/students")
+        .get("http://localhost:9000/api/students")
         .then((response) => {
           console.log(response.data);
           setUsers([...response.data]); // Assume response.data is an array of objects

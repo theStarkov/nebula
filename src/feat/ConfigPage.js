@@ -32,7 +32,7 @@ const ConfigPage = () => {
   const fulfillCheck = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/health-check",
+        "http://localhost:9000/api/health-check",
         {}
       );
       console.log("THIS IS RESPONSE....", response);
@@ -62,7 +62,7 @@ const ConfigPage = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/test-db-connection",
+        "http://localhost:9000/api/test-db-connection",
         {
           inputs,
         },
